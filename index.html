@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>초막골 프라이빗 글램핑</title>
+    
+    <!-- 오픈그래프 (카카오톡 미리보기 설정) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="🏕️ 초막골 프라이빗 글램핑" />
+    <meta property="og:description" content="가장들의 완벽한 일상 탈출을 위한 휴식 가이드 및 일정표" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?q=80&w=1200&auto=format&fit=crop" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { 
+            font-family: 'Pretendard', sans-serif; 
+            letter-spacing: -0.02em;
+            background-image: url('https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* 배경 오버레이 */
+        .bg-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.98));
+            z-index: -2;
+        }
+
+        /* 고급스러운 글래스 카드 */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .glass-panel:hover {
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(217, 119, 6, 0.1);
+        }
+
+        .glow-text {
+            text-shadow: 0 0 30px rgba(217, 119, 6, 0.4);
+        }
+
+        /* 프리미엄 체크박스 */
+        .premium-checkbox {
+            appearance: none;
+            width: 1.4rem;
+            height: 1.4rem;
+            border: 1.5px solid #475569;
+            border-radius: 4px;
+            background-color: rgba(15, 23, 42, 0.4);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+        .premium-checkbox:checked {
+            background-color: #d97706;
+            border-color: #d97706;
+            box-shadow: 0 0 10px rgba(217, 119, 6, 0.5);
+        }
+        .premium-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            width: 5px;
+            height: 10px;
+            border: solid #0f172a;
+            border-width: 0 2px 2px 0;
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        /* AI 타이핑 커서 애니메이션 */
+        .typing-cursor::after {
+            content: '▌';
+            animation: blink 1s step-start infinite;
+            color: #fbbf24;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* 페이드인 애니메이션용 클래스 */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen pb-24 selection:bg-amber-600/30 selection:text-amber-100">
+
+    <div class="bg-overlay"></div>
+    
+    <!-- 인터랙티브 별똥별 캔버스 (추가) -->
+    <canvas id="starCanvas" class="fixed top-0 left-0 w-full h-full z-[-1] pointer-events-none"></canvas>
+
+    <!-- Header Section -->
+    <header class="pt-28 pb-16 px-6 text-center max-w-4xl mx-auto relative z-10 fade-up">
+        
+        <div class="inline-flex items-center justify-center space-x-3 text-amber-500/80 tracking-[0.2em] text-xs font-semibold mb-6 uppercase">
+            <span class="w-8 h-[1px] bg-amber-500/50"></span>
+            <span>Gentlemen's Getaway</span>
+            <span class="w-8 h-[1px] bg-amber-500/50"></span>
+        </div>
+        
+        <!-- 굵기를 동일하게 맞춘 타이틀 -->
+        <h1 class="text-4xl md:text-6xl font-bold text-white mb-8 tracking-tight glow-text leading-tight">
+            일상 탈출, <br class="md:hidden">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">초막골 프라이빗 글램핑</span>
+        </h1>
+        
+        <div class="max-w-xl mx-auto">
+            <p class="text-slate-300 text-lg font-light leading-relaxed">
+                가정과 일터의 짐은 잠시 내려놓고, 온전히 우리만의 휴식을 위한 시간.<br>
+                점심엔 정갈한 <span class="text-white font-medium">회와 매운탕</span>, 저녁엔 <span class="text-white font-medium">프리미엄 숯불 바베큐</span>로<br>
+                아무 생각 없이 편하게 쉬다 오기(메뉴 변경 및 추천 가능)
+            </p>
+            <p class="text-slate-500 text-sm mt-5 tracking-wide bg-slate-800/50 inline-block px-4 py-1.5 rounded-full border border-slate-700/50">
+                2026. 04. 24 FRI
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 md:px-6 space-y-8 relative z-10">
+
+        <!-- Timeline Section -->
+        <section class="glass-panel rounded-3xl p-8 md:p-12 fade-up" style="transition-delay: 0.1s;">
+            <div class="flex items-center space-x-4 mb-12 border-b border-slate-700/50 pb-6">
+                <div class="bg-amber-500/10 p-3 rounded-2xl border border-amber-500/20">
+                    <i data-lucide="clock" class="w-6 h-6 text-amber-500"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-white tracking-wide">여정 안내</h2>
+                    <p class="text-slate-400 text-sm mt-1 font-light">우리의 완벽한 휴식을 위한 타임라인</p>
+                </div>
+            </div>
+            
+            <div class="relative border-l border-slate-700 ml-3 md:ml-6 space-y-10">
+                <!-- ... existing timeline content ... -->
+                <div class="relative pl-8 md:pl-10 group">
+                    <div class="absolute w-2.5 h-2.5 bg-slate-600 rounded-full -left-[5.5px] top-2 transition-all duration-300 group-hover:bg-amber-500 group-hover:shadow-[0_0_10px_#d97706]"></div>
+                    <div class="flex flex-col md:flex-row md:items-baseline md:space-x-5 mb-1">
+                        <span class="font-light text-amber-500 text-2xl">12:30</span>
+                        <span class="font-medium text-white text-lg mt-1 md:mt-0">[선발대] 식재료 픽업 및 장보기</span>
+                    </div>
+                    <p class="text-slate-400 font-light">농수산물 시장에서 신선한 횟감 포장, 마트에서 필요한 식음료 여유롭게 준비</p>
+                </div>
+
+                <div class="relative pl-8 md:pl-10 group">
+                    <div class="absolute w-2.5 h-2.5 bg-slate-600 rounded-full -left-[5.5px] top-2 transition-all duration-300 group-hover:bg-amber-500"></div>
+                    <div class="flex flex-col md:flex-row md:items-baseline md:space-x-5 mb-1">
+                        <span class="font-light text-amber-500 text-2xl">14:00</span>
+                        <span class="font-medium text-white text-lg mt-1 md:mt-0">베이스캠프 체크인</span>
+                    </div>
+                    <p class="text-slate-400 font-light">도착 후 짐 풀기. 냉장고 세팅 후 가볍게 시원한 맥주 한 잔으로 시작</p>
+                </div>
+
+                <div class="relative pl-8 md:pl-10 group">
+                    <div class="absolute w-3 h-3 bg-amber-500 rounded-full -left-[6.5px] top-2 shadow-[0_0_15px_#d97706] animate-pulse"></div>
+                    <div class="flex flex-col md:flex-row md:items-baseline md:space-x-5 mb-1">
+                        <span class="font-semibold text-amber-400 text-2xl">15:00</span>
+                        <span class="font-medium text-white text-xl mt-1 md:mt-0 flex items-center">
+                            [완전체 합류] 1차 만찬
+                        </span>
+                    </div>
+                    <p class="text-slate-300 font-light mt-1">모두 모였으니 포장해 온 회와 매운탕으로 든든하게 늦은 점심 및 가벼운 반주</p>
+                </div>
+
+                <div class="relative pl-8 md:pl-10 group">
+                    <div class="absolute w-2.5 h-2.5 bg-slate-600 rounded-full -left-[5.5px] top-2 transition-all duration-300 group-hover:bg-amber-500"></div>
+                    <div class="flex flex-col md:flex-row md:items-baseline md:space-x-5 mb-1">
+                        <span class="font-light text-amber-500 text-2xl">16:30</span>
+                        <span class="font-medium text-white text-lg mt-1 md:mt-0">개인 정비 및 자유 시간</span>
+                    </div>
+                    <p class="text-slate-400 font-light">일상의 피로를 푸는 낮잠 타임 또는 자연 속에서 각자만의 조용한 휴식</p>
+                </div>
+
+                <div class="relative pl-8 md:pl-10 group">
+                    <div class="absolute w-3 h-3 bg-amber-500 rounded-full -left-[6.5px] top-2 shadow-[0_0_15px_#d97706]"></div>
+                    <div class="flex flex-col md:flex-row md:items-baseline md:space-x-5 mb-1">
+                        <span class="font-semibold text-amber-400 text-2xl">18:00</span>
+                        <span class="font-medium text-white text-xl mt-1 md:mt-0 flex items-center">
+                            프리미엄 숯불 바베큐
+                        </span>
+                    </div>
+                    <p class="text-slate-300 font-light mt-1">질 좋은 고기와 술, 그리고 깊어가는 밤을 위한 메인 디너 타임</p>
+                </div>
+
+                <div class="relative pl-8 md:pl-10 group">
+                    <div class="absolute w-2.5 h-2.5 bg-slate-600 rounded-full -left-[5.5px] top-2 transition-all duration-300 group-hover:bg-amber-500"></div>
+                    <div class="flex flex-col md:flex-row md:items-baseline md:space-x-5 mb-1">
+                        <span class="font-light text-amber-500 text-2xl">20:30</span>
+                        <span class="font-medium text-white text-lg mt-1 md:mt-0">심야의 대화</span>
+                    </div>
+                    <p class="text-slate-400 font-light">따뜻한 국물 요리를 안주 삼아, 그동안 못다 한 이야기들을 나누는 시간</p>
+                </div>
+
+                <div class="relative pl-8 md:pl-10 group">
+                    <div class="absolute w-2.5 h-2.5 bg-slate-600 rounded-full -left-[5.5px] top-2"></div>
+                    <div class="flex flex-col md:flex-row md:items-baseline md:space-x-5 mb-1">
+                        <span class="font-light text-slate-500 text-2xl">22:00</span>
+                        <span class="font-medium text-slate-300 text-lg mt-1 md:mt-0">매너타임 및 취침</span>
+                    </div>
+                    <p class="text-slate-500 font-light">캠핑장 에티켓에 맞춰 자리를 정돈하고 차분하게 하루를 마무리</p>
+                </div>
+
+                <div class="relative pl-8 md:pl-10 group">
+                    <div class="absolute w-2.5 h-2.5 bg-slate-600 rounded-full -left-[5.5px] top-2"></div>
+                    <div class="flex flex-col md:flex-row md:items-baseline md:space-x-5 mb-1">
+                        <span class="font-light text-slate-500 text-2xl">11:00</span>
+                        <span class="font-medium text-slate-300 text-lg mt-1 md:mt-0">모닝 커피 및 일상 복귀</span>
+                    </div>
+                    <p class="text-slate-500 font-light">가벼운 해장과 모닝 커피 한 잔 후, 아쉬움을 뒤로하고 퇴실</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Director Section (New Feature) -->
+        <section class="glass-panel rounded-3xl p-8 md:p-12 border-2 border-indigo-500/30 relative overflow-hidden fade-up" style="transition-delay: 0.2s;">
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-indigo-500/20 blur-[50px] rounded-full pointer-events-none"></div>
+            
+            <div class="flex items-center space-x-4 mb-6">
+                <div class="bg-indigo-500/20 p-3 rounded-2xl border border-indigo-500/30 text-indigo-400">
+                    <i data-lucide="sparkles" class="w-6 h-6 animate-pulse"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-white tracking-wide">AI 캠핑 디렉터 <span class="text-xs bg-indigo-600 text-white px-2 py-0.5 rounded-full ml-2 align-middle">BETA</span></h2>
+                    <p class="text-slate-400 text-sm mt-1 font-light">분위기가 루즈해질 때 눌러보세요. AI가 최적의 솔루션을 제안합니다.</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/60 border border-slate-700/50 rounded-2xl p-6 min-h-[120px] mb-6 flex flex-col justify-center">
+                <p id="ai-output" class="text-slate-300 font-light text-lg leading-relaxed text-center">
+                    <span class="text-slate-500 text-sm">대기 중... 하단의 버튼을 눌러 AI 분석을 시작하세요.</span>
+                </p>
+            </div>
+
+            <button onclick="runAI()" class="w-full md:w-auto px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-medium rounded-xl shadow-[0_0_20px_rgba(79,70,229,0.3)] transition-all duration-300 flex items-center justify-center mx-auto group">
+                <i data-lucide="cpu" class="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform"></i>
+                오늘 밤 분위기 분석하기
+            </button>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Shopping List Section -->
+            <section class="lg:col-span-7 glass-panel rounded-3xl p-8 md:p-12 fade-up" style="transition-delay: 0.3s;">
+                <div class="flex items-center space-x-4 mb-8 border-b border-slate-700/50 pb-6">
+                    <div class="bg-amber-500/10 p-3 rounded-2xl border border-amber-500/20">
+                        <i data-lucide="shopping-bag" class="w-6 h-6 text-amber-500"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white tracking-wide">장보기 리스트</h2>
+                        <p class="text-slate-400 text-sm mt-1 font-light">선발대가 체크해야 할 미식 라인업</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/50 border-l-4 border-amber-600 text-slate-300 p-5 rounded-r-xl mb-10 text-sm font-light leading-relaxed">
+                    <div class="flex items-center text-amber-500 mb-2 font-medium">
+                        <i data-lucide="info" class="w-4 h-4 mr-2"></i>
+                        화재 예방 규정 안내
+                    </div>
+                    초막골 생태공원 규정상 <strong>'장작(불멍)' 사용이 엄격히 금지</strong>되어 있습니다.<br>
+                    바베큐를 위한 <strong>'참숯'</strong>만 허용되니, 구매 시 반드시 확인 바랍니다.
+                </div>
+
+                <div class="space-y-10">
+                    <div>
+                        <h3 class="text-sm font-medium text-slate-400 uppercase tracking-widest mb-4">Food & Beverage</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start group">
+                                <input type="checkbox" onchange="toggleCheck(this)" class="premium-checkbox mr-4">
+                                <span class="text-slate-200 text-lg font-light transition-all duration-300 mt-0.5">제철 모둠회 및 매운탕 거리 <span class="text-slate-500 text-sm block md:inline">(농수산물 시장 픽업)</span></span>
+                            </li>
+                            <li class="flex items-start group">
+                                <input type="checkbox" onchange="toggleCheck(this)" class="premium-checkbox mr-4">
+                                <span class="text-slate-200 text-lg font-light transition-all duration-300 mt-0.5">질 좋은 삼겹살 및 목살 <span class="text-slate-500 text-sm block md:inline">(1.5kg 이상 여유 있게)</span></span>
+                            </li>
+                            <li class="flex items-start group">
+                                <input type="checkbox" onchange="toggleCheck(this)" class="premium-checkbox mr-4">
+                                <span class="text-slate-200 text-lg font-light transition-all duration-300 mt-0.5">모둠 소시지, 버섯, 마늘, 고추, 쌈채소류</span>
+                            </li>
+                            <li class="flex items-start group">
+                                <input type="checkbox" onchange="toggleCheck(this)" class="premium-checkbox mr-4">
+                                <span class="text-slate-200 text-lg font-light transition-all duration-300 mt-0.5">깊은 맛의 심야 국물 밀키트 <span class="text-slate-500 text-sm block md:inline">(부대찌개 등)</span></span>
+                            </li>
+                            <li class="flex items-start group">
+                                <input type="checkbox" onchange="toggleCheck(this)" class="premium-checkbox mr-4">
+                                <span class="text-slate-200 text-lg font-light transition-all duration-300 mt-0.5">즉석밥 4개, 익일 해장용 라면</span>
+                            </li>
+                            <li class="flex items-start group bg-slate-800/30 p-4 rounded-xl border border-slate-700/50">
+                                <input type="checkbox" onchange="toggleCheck(this)" class="premium-checkbox mr-4">
+                                <span class="text-amber-100 text-lg font-medium transition-all duration-300 mt-0.5">주류(소주, 맥주), 생수 2L, 얼음 넉넉히</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-sm font-medium text-slate-400 uppercase tracking-widest mb-4">Camping Essentials</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-center group">
+                                <input type="checkbox" onchange="toggleCheck(this)" class="premium-checkbox mr-4">
+                                <span class="text-slate-200 text-lg font-light transition-all duration-300">바베큐용 참숯 및 착화제</span>
+                            </li>
+                            <li class="flex items-center group">
+                                <input type="checkbox" onchange="toggleCheck(this)" class="premium-checkbox mr-4">
+                                <span class="text-slate-200 text-lg font-light transition-all duration-300">그릴망(석쇠), 부탄가스</span>
+                            </li>
+                            
+                            <li class="flex items-start group mt-4">
+                                <input type="checkbox" onchange="toggleCheck(this)" class="premium-checkbox mr-4 mt-1">
+                                <div class="transition-all duration-300">
+                                    <span class="text-slate-200 text-lg font-light block mb-1">편의를 위한 일회용품 세트</span>
+                                    <span class="text-sm text-slate-500 font-light block">종이컵, 앞접시, 국그릇, 수저 세트 (설거지 최소화)</span>
+                                </div>
+                            </li>
+
+                            <li class="flex items-center group">
+                                <input type="checkbox" onchange="toggleCheck(this)" class="premium-checkbox mr-4">
+                                <span class="text-slate-200 text-lg font-light transition-all duration-300">목장갑, 물티슈, 키친타올</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Side Info Section -->
+            <div class="lg:col-span-5 space-y-8">
+                
+                <section class="glass-panel rounded-3xl p-8 md:p-10 fade-up" style="transition-delay: 0.4s;">
+                    <div class="flex items-center space-x-3 mb-8 border-b border-slate-700/50 pb-4">
+                        <h2 class="text-xl font-bold text-white tracking-wide">개인 준비물</h2>
+                    </div>
+                    <ul class="space-y-6">
+                        <li class="flex items-start">
+                            <div class="bg-slate-800/80 p-2 rounded-xl mr-4 border border-slate-700 mt-1">
+                                <i data-lucide="droplets" class="w-5 h-5 text-slate-300"></i>
+                            </div>
+                            <div>
+                                <b class="block text-lg text-white font-medium mb-1">개인 세면도구</b>
+                                <span class="text-sm text-slate-400 font-light">수건, 칫솔, 치약, 샴푸 등 (숙소 미제공)</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="bg-slate-800/80 p-2 rounded-xl mr-4 border border-slate-700 mt-1">
+                                <i data-lucide="shirt" class="w-5 h-5 text-slate-300"></i>
+                            </div>
+                            <div>
+                                <b class="block text-lg text-white font-medium mb-1">편안한 라운지웨어</b>
+                                <span class="text-sm text-slate-400 font-light">휴식을 위한 편한 옷과 슬리퍼 지참 권장</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="bg-slate-800/80 p-2 rounded-xl mr-4 border border-slate-700 mt-1">
+                                <i data-lucide="plug-2" class="w-5 h-5 text-slate-300"></i>
+                            </div>
+                            <div>
+                                <b class="block text-lg text-white font-medium mb-1">전자기기 충전기</b>
+                                <span class="text-sm text-slate-400 font-light">스마트폰 충전기 및 보조배터리</span>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="glass-panel rounded-3xl p-8 md:p-10 fade-up" style="transition-delay: 0.5s;">
+                    <div class="flex items-center space-x-3 mb-6 border-b border-slate-700/50 pb-4">
+                        <h2 class="text-lg font-bold text-white tracking-wide">객실 비치 품목</h2>
+                    </div>
+                    <ul class="space-y-3 text-slate-300 font-light text-sm">
+                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-amber-500 rounded-full mr-3"></span>프라이빗 화장실 및 샤워실</li>
+                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-amber-500 rounded-full mr-3"></span>냉장고, 인덕션, 냉난방기</li>
+                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-amber-500 rounded-full mr-3"></span>침대 및 침구류 세트</li>
+                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-amber-500 rounded-full mr-3"></span>기본 조리 도구 (냄비, 가위, 집게 등)</li>
+                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-amber-500 rounded-full mr-3"></span>야외 바베큐 그릴 통</li>
+                    </ul>
+                </section>
+            </div>
+
+        </div>
+        
+        <!-- Activity Section -->
+        <section class="glass-panel rounded-3xl p-8 md:p-12 mt-8 fade-up" style="transition-delay: 0.6s;">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="mb-8 md:mb-0 md:pr-8 text-center md:text-left">
+                    <h2 class="text-2xl font-bold mb-2 text-white flex items-center justify-center md:justify-start tracking-wide">
+                        <i data-lucide="wine" class="w-6 h-6 mr-3 text-amber-500"></i>
+                        여유와 힐링의 시간
+                    </h2>
+                    <p class="text-slate-400 font-light text-sm">소란스러운 구기종목 대신, 잔잔한 음악과 깊은 대화로 채우는 밤</p>
+                </div>
+                <div class="flex flex-wrap justify-center md:justify-end gap-3">
+                    <span class="border border-slate-600 bg-slate-800/50 text-slate-200 px-5 py-2.5 rounded-full font-light text-sm flex items-center shadow-lg">
+                        <i data-lucide="speaker" class="w-4 h-4 mr-2 text-amber-400"></i> 블루투스 스피커
+                    </span>
+                    <span class="border border-slate-600 bg-slate-800/50 text-slate-200 px-5 py-2.5 rounded-full font-light text-sm flex items-center shadow-lg">
+                        <i data-lucide="coffee" class="w-4 h-4 mr-2 text-amber-400"></i> 따뜻한 모닝 커피
+                    </span>
+                    <span class="border border-slate-600 bg-slate-800/50 text-slate-200 px-5 py-2.5 rounded-full font-light text-sm flex items-center shadow-lg">
+                        <i data-lucide="box" class="w-4 h-4 mr-2 text-amber-400"></i> 가벼운 보드게임
+                    </span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // 아이콘 렌더링
+        lucide.createIcons();
+
+        // 스크롤 시 나타나는 페이드인 애니메이션 로직
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-up').forEach((el) => {
+            observer.observe(el);
+        });
+
+        // 체크박스 취소선 로직
+        function toggleCheck(checkbox) {
+            const content = checkbox.nextElementSibling;
+            if (checkbox.checked) {
+                content.classList.add('line-through', 'opacity-30');
+            } else {
+                content.classList.remove('line-through', 'opacity-30');
+            }
+        }
+
+        // AI 디렉터 데이터 및 로직
+        const aiTopics = [
+            "최근 1년간 가장 행복했던 '나만의 소소한 순간'은 언제였나?",
+            "만약 로또 1등에 당첨된다면 와이프에게 말한다 vs 평생 비밀로 한다",
+            "요즘 와이프 몰래 결제하고 싶은 아이템이나 취미가 있다면?",
+            "우리가 20대 때 가장 미쳤던 흑역사 하나씩 풀어보자",
+            "가장으로서 어깨가 무거울 때, 나만의 스트레스 해소법은?",
+            "다시 태어나도 지금의 아내와 결혼한다 vs 일단 혼자 살아본다 (솔직하게 가자)",
+            "솔직히 오늘 캠핑 오기 직전까지 '아 짐 싸기 귀찮다'고 1초라도 후회한 적 있다?",
+            "지금 당장 아무도 모르는 1천만 원의 비자금이 생겼다. 오직 나만을 위해 쓴다면?",
+            "'아, 나도 이제 진짜 늙고 아재가 다 됐구나'라고 뼈저리게 느꼈던 순간은?",
+            "최근 아내에게 가장 크게 혼났거나, 억울하게 눈치 보였던 썰 하나씩 풀기",
+            "결혼 전 싱글일 때 '이것'만은 꼭 원 없이 해볼 걸 하고 후회하는 게 있다면?",
+            "내 인생의 '리즈 시절(최전성기)'은 언제였나? 그땐 대체 어땠길래?",
+            "만약 좀비 사태가 터진다면, 우리 셋 중 가장 먼저 물릴 것 같은 사람과 끝까지 살아남을 사람은?",
+            "10년 뒤, 40대~50대가 된 우리는 어떤 모습으로 나이 들어가고 있을까?",
+            "가장으로서, 남편으로서 살면서 최근 가장 눈물 났거나 속으로 뭉클했던 순간은?"
+        ];
+        
+        const aiDrinks = [
+            "얼그레이 하이볼 (선발대가 마트에서 토닉워터/위스키 추가 픽업 요망)",
+            "소맥 황금비율 (테라 7 + 참이슬 3의 부드러운 목넘김 추천)",
+            "시원한 캔맥주 원샷 (체크인 직후 갈증 해소용으로 강력 추천)",
+            "별빛청하 + 소주 믹스 (의외로 안 취하고 계속 들어가는 마법의 비율)"
+        ];
+
+        let isTyping = false;
+
+        function runAI() {
+            if (isTyping) return;
+            isTyping = true;
+            
+            const outputEl = document.getElementById('ai-output');
+            outputEl.innerHTML = '<span class="text-indigo-400">데이터 분석 중...</span>';
+            outputEl.classList.remove('typing-cursor');
+
+            setTimeout(() => {
+                const randomTopic = aiTopics[Math.floor(Math.random() * aiTopics.length)];
+                const randomDrink = aiDrinks[Math.floor(Math.random() * aiDrinks.length)];
+                
+                const finalHTML = `
+                    <div class="text-left inline-block">
+                        <p class="text-amber-400 font-bold mb-2">✅ 분석 완료 (유부남 3인 맞춤형)</p>
+                        <p class="mb-1"><span class="text-indigo-300 font-medium">추천 주류 조합:</span> ${randomDrink}</p>
+                        <p><span class="text-indigo-300 font-medium">오늘 밤 대화 주제:</span> "${randomTopic}"</p>
+                    </div>
+                `;
+
+                typeWriter(outputEl, finalHTML, 0);
+            }, 800);
+        }
+
+        function typeWriter(element, html, index) {
+            element.classList.add('typing-cursor');
+            if (index === 0) element.innerHTML = '';
+            
+            if (index < html.length) {
+                // HTML 태그 처리 (태그 덩어리는 한 번에 넘김)
+                if(html.charAt(index) === '<') {
+                    let tag = '';
+                    while(html.charAt(index) !== '>' && index < html.length) {
+                        tag += html.charAt(index);
+                        index++;
+                    }
+                    tag += '>';
+                    element.innerHTML += tag;
+                } else {
+                    element.innerHTML += html.charAt(index);
+                }
+                
+                setTimeout(() => typeWriter(element, html, index + 1), 15);
+            } else {
+                element.classList.remove('typing-cursor');
+                isTyping = false;
+            }
+        }
+
+        // --- 별똥별 & 폭죽 애니메이션 (인터랙티브 AI 요소) ---
+        const canvas = document.getElementById('starCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // 마우스 및 터치 위치 추적
+        const mouse = { x: -1000, y: -1000 };
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+        window.addEventListener('touchmove', (e) => {
+            mouse.x = e.touches[0].clientX;
+            mouse.y = e.touches[0].clientY;
+        });
+
+        const particles = [];
+        const shootingStars = [];
+
+        // 폭죽 파티클 클래스
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 4 + 1;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.life = 1;
+                this.decay = Math.random() * 0.02 + 0.015;
+                this.color = Math.random() > 0.5 ? '#fcd34d' : '#d97706'; // 골드 & 앰버
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life -= this.decay;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${this.color === '#fcd34d' ? '252,211,77' : '217,119,6'}, ${this.life})`;
+                ctx.fill();
+            }
+        }
+
+        // 별똥별 클래스
+        class ShootingStar {
+            constructor() {
+                this.reset(true);
+            }
+            reset(randomY = false) {
+                this.x = Math.random() * width * 1.5;
+                this.y = randomY ? Math.random() * height : -Math.random() * height;
+                this.length = Math.random() * 80 + 40;
+                this.speed = Math.random() * 12 + 8;
+                this.angle = Math.PI / 4; // 45도 각도로 떨어짐
+                this.thickness = Math.random() * 2 + 1;
+            }
+            update() {
+                this.x -= this.speed * Math.cos(this.angle);
+                this.y += this.speed * Math.sin(this.angle);
+
+                // 마우스/터치와의 거리 계산 (인터랙션)
+                const dx = this.x - mouse.x;
+                const dy = this.y - mouse.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                // 마우스에 닿으면 폭발 (반경 100px 이내)
+                if (dist < 100) {
+                    this.explode();
+                }
+
+                // 화면 밖으로 나가면 리셋
+                if (this.x < -200 || this.y > height + 200) {
+                    this.reset();
+                }
+            }
+            explode() {
+                // 폭죽 파티클 생성
+                for (let i = 0; i < 25; i++) {
+                    particles.push(new Particle(this.x, this.y));
+                }
+                this.reset();
+                // 연속 폭발을 막기 위해 화면 한참 위로 재배치
+                this.y = -Math.random() * height * 2; 
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(this.x + this.length * Math.cos(this.angle), this.y - this.length * Math.sin(this.angle));
+                
+                const gradient = ctx.createLinearGradient(this.x, this.y, this.x + this.length * Math.cos(this.angle), this.y - this.length * Math.sin(this.angle));
+                gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+                gradient.addColorStop(0.2, 'rgba(251, 191, 36, 0.8)');
+                gradient.addColorStop(1, 'rgba(251, 191, 36, 0)');
+                
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = this.thickness;
+                ctx.stroke();
+            }
+        }
+
+        // 초기 별 생성
+        for (let i = 0; i < 15; i++) {
+            shootingStars.push(new ShootingStar());
+        }
+
+        // 애니메이션 루프
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            shootingStars.forEach(star => {
+                star.update();
+                star.draw();
+            });
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
